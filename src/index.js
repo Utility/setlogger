@@ -1,4 +1,4 @@
-import Database from './components/Database'
+import Database from './utils/Database'
 
 // testing
 export { Database }
