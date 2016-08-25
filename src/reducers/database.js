@@ -2,9 +2,12 @@
   All the reducers needed for the database
 */
 
-const nodeReducer = (state = {}, action) => {
+import * from '../actions'
+
+const node = (state = {}, action) => {
   switch(action.type) {
-    case 'ADD_NODE':
+    case CREATE_NODE:
+
       return {...state, }
     default: return state
   }
@@ -12,8 +15,9 @@ const nodeReducer = (state = {}, action) => {
 
 const databaseReducer = (state = {}, action) => {
   switch(action.type) {
-    case 'ADD_NODE':
-      return {...state, foo: 'blah'}
+    case CREATE_NODE:
+      newNode = node
+      return {...state, 'newid':{}}
     default: return state
   }
 }

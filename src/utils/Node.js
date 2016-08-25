@@ -12,6 +12,6 @@ export default class Node {
   }
 
   get = (prop) => {
-    return this[prop];
+    return this[prop]
   }
 }
