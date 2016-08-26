@@ -6,13 +6,14 @@
 export const CREATE_NODE = 'CREATE_NODE'
 export const DELETE_NODE = 'DELETE_NODE'
 
-// push and remove a node from children
-export const ADD_NODE = 'ADD_NODE'
-export const REMOVE_NODE = 'REMOVE_NODE'
-
 // the only thing you can do on a node is set a property
+// if the property is a list there are separate transforms
 export const SET_PROPERTY = 'SET_PROPERTY'
 export const REMOVE_PROPERTY = 'REMOVE_PROPERTY'
+
+// insert and remove from an array property
+export const ARRAY_INSERT = 'ARRAY_INSERT'
+export const ARRAY_REMOVE = 'ARRAY_REMOVE'
 
 // used to set type info
 export const SET_SCHEMA = 'SET_SCHEMA'
@@ -21,10 +22,10 @@ export const SET_SCHEMA = 'SET_SCHEMA'
 export const DB_ACTIONS = [
   CREATE_NODE,
   DELETE_NODE,
-  ADD_NODE,
-  REMOVE_NODE,
   SET_PROPERTY,
   REMOVE_PROPERTY,
+  ARRAY_INSERT,
+  ARRAY_REMOVE,
   SET_SCHEMA
 ]
 
