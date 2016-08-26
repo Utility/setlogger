@@ -17,8 +17,9 @@ export const ARRAY_REMOVE = 'ARRAY_REMOVE'
 
 // used to set type info
 export const SET_SCHEMA = 'SET_SCHEMA'
+export const SET_BUCKET_SCHEMA = 'SET_BUCKET_SCHEMA'
 
-// database actions that are stored in the main log
+// database actions that are stored in the main bucket log
 export const DB_ACTIONS = [
   CREATE_NODE,
   DELETE_NODE,
@@ -26,7 +27,7 @@ export const DB_ACTIONS = [
   REMOVE_PROPERTY,
   ARRAY_INSERT,
   ARRAY_REMOVE,
-  SET_SCHEMA
+  SET_BUCKET_SCHEMA,
 ]
 
 // actions to fetch and merge existing nodes
