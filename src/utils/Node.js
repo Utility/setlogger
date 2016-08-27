@@ -7,11 +7,11 @@ export default class Node {
   }
 
   // define set / get interface
-  set = (prop, value) => {
+  set(prop, value){
     return
   }
 
-  get = (prop) => {
+  get(prop){
     return this[prop]
   }
 }

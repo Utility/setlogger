@@ -24,8 +24,8 @@
   /blah/someval
 */
 
-import * from '../actions'
-import * from '../utils/helpers'
+import * as actions from '../actions'
+import * as utils from '../utils/helpers'
 import DEFAULT_SCHEMA from '../utils/schema'
 
 
@@ -34,30 +34,52 @@ const bucketSchema = (state) => {
   return DEFAULT_SCHEMA
 }
 
+// return a new state object with a proper revision set
+export const revisedNode = (state, newState) => {
+  revCount = 0
+  if (state.rev){
+    let tokens = rev.split('-')
+    if (!isNan(parseInt(tokens[0]))) {
+      revCount = parseInt(tokens[0]) + 1
+    }
+  }
+
+  return Object.assign({}, state, newState, {
+    rev: revCount + '-' + utils.guid(16)
+  })
+}
+
 // TODO provide method for checking against schema
 const applySchema = (schema) => {}
 
 
 const node = (schema, state = {}, action) => {
-  let returnState = {}
+  let returnState = {},
+      arr = null,
+      arr2 = null
+
 
   switch(action.type) {
-    case SET_PROPERTY:
+    case actions.SET_PROPERTY:
       Object.keys(action.properties).forEach((key) => {
         if (Array.isArray(key)) {
-          recursiveApplyState(state, returnState, key, action.properties[key])
+          utils.recursiveApplyState(
+            state,
+            returnState,
+            key,
+            action.properties[key])
         } else {
           returnState[key] = action.properties[key]
         }
       })
       return revisedNode(state, returnState)
 
-    case REMOVE_PROPERTY:
+    case actions.REMOVE_PROPERTY:
       return revisedNode(state, returnState)
 
-    case ARRAY_INSERT:
-      let arr = state[action.property]
-      let arr2 = action.value
+    case actions.ARRAY_INSERT:
+      arr = state[action.property]
+      arr2 = action.value
       if (!Array.isArray(arr2)) arr2 = [arr2];
 
       if (action.index === 0) {
@@ -73,14 +95,14 @@ const node = (schema, state = {}, action) => {
       } else {
         returnState[action.property] = [
           ...arr.slice(0, action.index),
-          arr2
-          ...arr.slice(action.index, arr.length),
+          arr2,
+          ...arr.slice(action.index, arr.length)
         ]
       }
       return revisedNode(state, returnState)
 
-    case ARRAY_REMOVE:
-      let arr = state[action.property]
+    case actions.ARRAY_REMOVE:
+      arr = state[action.property]
       count = action.count || 1
 
       returnState[action.property] = [
@@ -97,37 +119,52 @@ const bucket = (bucketId, state = {}, action) => {
   let schema = bucketSchema(state)
   let nodeId = null
   if (action.id)
-    nodeId = getRelativeNodeId(bucketId, action.id)
+    nodeId = utils.getRelativeNodeId(bucketId, action.id)
 
   switch(action.type) {
-    case CREATE_NODE:
+    case actions.CREATE_NODE:
       return Object.assign({}, state,
-        wrapObject(nodeId, node(schema, state[nodeId], action)))
+        utils.wrapObject(
+          nodeId,
+          node(schema, state[nodeId], action)
+        ))
 
-    case DELETE_NODE:
+    case actions.DELETE_NODE:
       let newState = {}
       Object.keys(state).forEach((key) => {
         if (key !== nodeId) newState[key] = state[key]
       })
       return newState
 
-    case SET_PROPERTY:
+    case actions.SET_PROPERTY:
       return Object.assign({}, state,
-        wrapObject(nodeId, node(schema, state[nodeId], action)))
+        utils.wrapObject(
+          nodeId,
+          node(schema, state[nodeId], action)
+        ))
 
-    case REMOVE_PROPERTY:
+    case actions.REMOVE_PROPERTY:
       return Object.assign({}, state,
-        wrapObject(nodeId, node(schema, state[nodeId], action)))
+        utils.wrapObject(
+          nodeId,
+          node(schema, state[nodeId], action)
+        ))
 
-    case ARRAY_INSERT:
+    case actions.ARRAY_INSERT:
       return Object.assign({}, state,
-        wrapObject(nodeId, node(schema, state[nodeId], action)))
+        utils.wrapObject(
+          nodeId,
+          node(schema, state[nodeId], action)
+        ))
 
-    case ARRAY_REMOVE:
+    case actions.ARRAY_REMOVE:
       return Object.assign({}, state,
-        wrapObject(nodeId, node(schema, state[nodeId], action)))
+        utils.wrapObject(
+          nodeId,
+          node(schema, state[nodeId], action)
+        ))
 
-    case SET_SCHEMA:
+    case actions.SET_SCHEMA:
       return Object.assign({}, state, {schema: action.schema})
 
     default:
@@ -139,7 +176,7 @@ const bucket = (bucketId, state = {}, action) => {
   Provide a schema and an optional function to resolve bucketId
   and get back a databaseReducer
 */
-const database = (schema, bucketRouter = getBucketId) => {
+const database = (schema, bucketRouter = utils.getBucketId) => {
 
   return (state = {}, action) => {
     let bucketId = null
@@ -147,33 +184,54 @@ const database = (schema, bucketRouter = getBucketId) => {
       bucketId = bucketRouter(schema, state, action.id)
 
     switch(action.type) {
-      case CREATE_NODE:
+      case actions.CREATE_NODE:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
-      case DELETE_NODE:
+      case actions.DELETE_NODE:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
-      case SET_PROPERTY:
+      case actions.SET_PROPERTY:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
-      case REMOVE_PROPERTY:
+      case actions.REMOVE_PROPERTY:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
-      case ARRAY_INSERT:
+      case actions.ARRAY_INSERT:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
-      case ARRAY_REMOVE:
+      case actions.ARRAY_REMOVE:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
-      case SET_SCHEMA:
+      case actions.SET_SCHEMA:
         return Object.assign({}, state,
-          wrapObject(bucketId, bucket(bucketId, state[bucketId], action)))
+          utils.wrapObject(
+            bucketId,
+            bucket(bucketId, state[bucketId], action)
+          ))
 
       default: return state
     }
