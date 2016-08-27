@@ -12,12 +12,13 @@ export const SET_PROPERTY = 'SET_PROPERTY'
 export const REMOVE_PROPERTY = 'REMOVE_PROPERTY'
 
 // insert and remove from an array property
+// {type: 'ARRAY_INSERT', property: 'items', index: 0, value:['adf']}
+// {type: 'ARRAY_REMOVE', property: 'items', index: 0, count: 3}
 export const ARRAY_INSERT = 'ARRAY_INSERT'
 export const ARRAY_REMOVE = 'ARRAY_REMOVE'
 
 // used to set type info
 export const SET_SCHEMA = 'SET_SCHEMA'
-export const SET_BUCKET_SCHEMA = 'SET_BUCKET_SCHEMA'
 
 // database actions that are stored in the main bucket log
 export const DB_ACTIONS = [
@@ -27,11 +28,13 @@ export const DB_ACTIONS = [
   REMOVE_PROPERTY,
   ARRAY_INSERT,
   ARRAY_REMOVE,
-  SET_BUCKET_SCHEMA,
+  SET_SCHEMA
 ]
 
+
 // actions to fetch and merge existing nodes
-// these should not sync to the
+// these should not sync to the database log but are
+// used to provide UI updates for asynchronous data
 export const FETCH_NODES = 'FETCH_NODES'
 export const MERGE_NODES = 'MERGE_NODES'
 export const UPDATE_NODE = 'UPDATE_NODE'
