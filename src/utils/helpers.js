@@ -2,46 +2,34 @@
   some helper functions to ease the pain
 */
 
-export const getBucketId(schema, id) => {
-  return id.split('/').slice(0, schema.bucketIdentifierLength + 1).join('/') + '/'
+export const getBucketId = (schema, id) => {
+  return id.split('/')
+    .slice(0, schema.bucketIdentifierLength + 1)
+    .join('/') + '/'
 }
 
 /**
   getRelativeNodeId will always return a relative path from the
   bucketId. While getGlobalNodeId will return a global path.
 */
-export const getRelativeNodeId(bucketId, id) => {
-  return id.replace(bucketId).('')
+export const getRelativeNodeId = (bucketId, id) => {
+  return id.replace(bucketId, '')
 }
 
-export const getGlobalNodeId(bucketId, id) => {
-  return bucketId + id.replace(bucketId).('')
+export const getGlobalNodeId = (bucketId, id) => {
+  return bucketId + id.replace(bucketId, '')
 }
 
 
 /**
   return a new object with {id: object}
 */
-export const wrapObject(id, object) => {
+export const wrapObject = (id, object) => {
   let newState = {}
   newState[id] = object
   return newState
 }
 
-// return a new state object with a proper revision set
-export const revisedNode = (state, newState) => {
-  revCount = 0
-  if (state.rev){
-    let tokens = rev.split('-')
-    if (!isNan(parseInt(tokens[0]))) {
-      revCount = parseInt(tokens[0]) + 1
-    }
-  }
-
-  return Object.assign({}, state, newState, {
-    rev: revCount + '-' + guid(16)
-  })
-}
 
 /**
   Allow a node to support an array key like:
@@ -50,6 +38,7 @@ export const revisedNode = (state, newState) => {
   Which will set a deeply nested value
   {data: {foo: {blah: 'newValue'}}}
 */
+
 export const recursiveApplyState = (state, newState, keys, val) => {
   key = keys[0]
   newState[key] = newState[key] || state[key]
@@ -61,7 +50,6 @@ export const recursiveApplyState = (state, newState, keys, val) => {
     newState[key] = recursiveApplyState(newState, newState[key], keys, val)
   }
 
-  return newState
 }
 
 

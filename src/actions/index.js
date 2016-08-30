@@ -41,6 +41,6 @@ export const UPDATE_NODE = 'UPDATE_NODE'
 export const CREATE_PLACEHOLDER_NODE = 'CREATE_PLACEHOLDER_NODE'
 
 // create a default node
-export createNode(properties={}){
+export const createNode = (properties={}) => {
   return {type: CREATE_NODE, properties: properties}
 }

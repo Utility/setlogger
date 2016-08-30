@@ -13,15 +13,14 @@ export default class Database {
   }
 
   // "db" is the top level object in state
-  getDB = () => this.store.getState().db
 
   // define set / get interface
-  set = (id, value) => {
+  set(id, value) {
     return null
   }
 
   //
-  get = (id) => {
+  get(id) {
 
   }
 }
