@@ -50,8 +50,17 @@ export const revisedNode = (state, newState) => {
   Which will set a deeply nested value
   {data: {foo: {blah: 'newValue'}}}
 */
-export const recursiveApplyState = (state, newState, key, val) => {
-  newState[]
+export const recursiveApplyState = (state, newState, keys, val) => {
+  key = keys[0]
+  newState[key] = newState[key] || state[key]
+
+  keys = keys.slice(1, keys.length)
+  if (keys.length === 0) {
+    newState[key] = val
+  } else {
+    newState[key] = recursiveApplyState(newState, newState[key], keys, val)
+  }
+
   return newState
 }
 
